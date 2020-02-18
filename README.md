@@ -29,11 +29,122 @@ npm run prisma
 
 Then open the browser link http://localhost:5555
 
+## Examples
+
+There are two user accounts `kuma@example.com` and `piper@example.com`. Both accounts have the password `graphql`. The `piper@example.com` account is non-active.
+
+Login as non-active user
+
+```graphql
+mutation {
+    login(email: "piper@example.com", password: "graphql") {
+        token
+    }
+}
+```
+
+Getting information as logged in user
+
+```graphql
+query {
+    me {
+        id
+        createdAt
+        name
+        email
+        active
+        brands {
+            id
+            name
+        }
+    }
+}
+```
+
+Getting brand 1 and all associated posts
+
+```graphql
+query {
+    brand(where: { id: 1 }) {
+        id
+        createdAt
+        name
+        posts {
+            title
+            content
+        }
+    }
+}
+```
+
+Making a post to brand 2 as a non-active user should fail
+
+```graphql
+mutation {
+    createPost(brandId: 2, title: "Ball", content: "Is life") {
+        title
+        content
+    }
+}
+```
+
+Making a post to brand 1 as a non-active user should fail
+
+```graphql
+mutation {
+    createPost(brandId: 1, title: "Ball", content: "Is life") {
+        title
+        content
+    }
+}
+```
+
+Login as active user
+
+```graphql
+mutation {
+    login(email: "kuma@example.com", password: "graphql") {
+        token
+    }
+}
+```
+
+Making a post to brand 1 as an active user should pass
+
+```graphql
+mutation {
+    createPost(brandId: 1, title: "Treats", content: "Feed them to me") {
+        title
+        content
+    }
+}
+```
+
+Getting brand 1 and all associated posts
+
+```graphql
+query {
+    brand(where: { id: 1 }) {
+        id
+        createdAt
+        name
+        posts {
+            title
+            content
+        }
+    }
+}
+```
+
 # Authentication
 
 This application uses `bcrypt` in order to create encrypted authentication tokens. Login via the `login` API call to retrieve the authorization token. All other API calls require this token by passing the given token via the `Authorization` HTTP header with `Bearer <token>`.
 
 # Security Layer
+
+## isActiveUser
+
+The user must be active in order to access the API call.
 
 ## isAuthenticatedUser
 
@@ -51,9 +162,6 @@ This is only a list of the functions and their security requirements. For a more
 
 -   brand
     -   Description: Gets a single brand object
-    -   Security: allow
--   brandPosts
-    -   Description: Gets all post objects associated with a single brand
     -   Security: allow
 -   brands
     -   Description: Gets multiple brand objects
@@ -76,39 +184,45 @@ This is only a list of the functions and their security requirements. For a more
 
 ## Mutations
 
+-   activateUser
+    -   Description: Activates a user
+    -   Security: isAuthenticatedUser and isActiveUser
 -   addUserToBrand
     -   Description: Add a user to a brand
-    -   Security: isAuthenticatedUser and isBrandUser
+    -   Security: isAuthenticatedUser and isActiveUser and isBrandUser
 -   createBrand
     -   Description: Create a new brand
-    -   Security: isAuthenticatedUser
+    -   Security: isAuthenticatedUser and isActiveUser
 -   createPost
     -   Description: Create a new post under a specified brand
-    -   Security: isAuthenticatedUser and isBrandUser
+    -   Security: isAuthenticatedUser and isActiveUser and isBrandUser
 -   createUser
     -   Description: Create a new user
     -   Security: allow
+-   deactivateUser
+    -   Description: Deactivates a user
+    -   Security: isAuthenticatedUser and isActiveUser
 -   deleteBrand
     -   Description: Delete a specific brand
-    -   Security: isAuthenticatedUser and isBrandUser
+    -   Security: isAuthenticatedUser and isActiveUser and isBrandUser
 -   deletePost
     -   Description: Delete a specific post
-    -   Security: isAuthenticatedUser and isBrandUser
+    -   Security: isAuthenticatedUser and isActiveUser and isBrandUser
 -   login
     -   Description: Obtain an authorization token
     -   Security: allow
 -   removeUserFromBrand
     -   Description: Remove a user from a specified brand
-    -   Security: isAuthenticatedUser and isBrandUser
+    -   Security: isAuthenticatedUser and isActiveUser and isBrandUser
 -   updateBrand
     -   Description: Update a brand object
-    -   Security: isAuthenticatedUser and isBrandUser
+    -   Security: isAuthenticatedUser and isActiveUser and isBrandUser
 -   updatePost
     -   Description: Update a post object
-    -   Security: isAuthenticatedUser and isBrandUser
+    -   Security: isAuthenticatedUser and isActiveUser and isBrandUser
 -   updateUser
     -   Description: Update a user object
-    -   Security: isAuthenticatedUser
+    -   Security: isAuthenticatedUser and isActiveUser
 
 # Libraries
 

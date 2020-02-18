@@ -1,8 +1,7 @@
 import { compare, hash } from 'bcryptjs'
-import { idArg, queryType } from 'nexus'
+import { queryType } from 'nexus'
 
 import { getUserId } from '../utils'
-import { Brand } from './Brand'
 
 export const Query = queryType({
     definition(t) {
@@ -27,19 +26,5 @@ export const Query = queryType({
 
         t.crud.post()
         t.crud.posts()
-
-        t.list.field('brandPosts', {
-            type: 'Post',
-            args: {
-                id: idArg({ nullable: false }),
-            },
-            resolve: (parent, { id }, ctx) => {
-                return ctx.prisma.post.findMany({
-                    where: {
-                        brand: { id: Number(id) },
-                    },
-                })
-            },
-        })
     },
 })

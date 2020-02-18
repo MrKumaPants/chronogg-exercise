@@ -13,15 +13,16 @@ model User {
     id        Int      @default(autoincrement()) @id
     name      String?
     password  String
-    active    Boolean  @default(false)
+    active    Boolean  @default(true)
     brands    Brand[]  @relation(name: "BrandUsers")
 }
 
 model Brand {
     createdAt DateTime @default(now())
     id        Int      @default(autoincrement()) @id
-    name      String?  @unique
+    name      String?
     users     User[]   @relation(name: "BrandUsers")
+    posts     Post[]
 }
 
 model Post {

@@ -7,5 +7,6 @@ export const Brand = objectType({
         t.model.createdAt()
         t.model.name()
         t.model.users({ pagination: false })
+        t.model.posts({ pagination: false })
     },
 })

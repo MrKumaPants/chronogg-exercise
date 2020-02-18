@@ -22,7 +22,6 @@ declare global {
 export interface NexusGenInputs {
   BrandWhereUniqueInput: { // input type
     id?: number | null; // Int
-    name?: string | null; // String
   }
   PostWhereUniqueInput: { // input type
     id?: number | null; // Int
@@ -69,20 +68,23 @@ export interface NexusGenFieldTypes {
     createdAt: any; // DateTime!
     id: number; // Int!
     name: string | null; // String
+    posts: NexusGenRootTypes['Post'][]; // [Post!]!
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
   Mutation: { // field return type
+    activateUser: NexusGenRootTypes['User']; // User!
     addUserToBrand: NexusGenRootTypes['Brand']; // Brand!
     createBrand: NexusGenRootTypes['Brand']; // Brand!
     createPost: NexusGenRootTypes['Post']; // Post!
     createUser: NexusGenRootTypes['User']; // User!
+    deactivateUser: NexusGenRootTypes['User']; // User!
     deleteBrand: NexusGenRootTypes['Brand'] | null; // Brand
     deletePost: NexusGenRootTypes['Post'] | null; // Post
     login: NexusGenRootTypes['Authorization']; // Authorization!
     removeUserFromBrand: NexusGenRootTypes['Brand']; // Brand!
     updateBrand: NexusGenRootTypes['Brand']; // Brand!
     updatePost: NexusGenRootTypes['Post']; // Post!
-    updateUser: NexusGenRootTypes['Authorization']; // Authorization!
+    updateUser: NexusGenRootTypes['User']; // User!
   }
   Post: { // field return type
     author: NexusGenRootTypes['User']; // User!
@@ -94,7 +96,6 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     brand: NexusGenRootTypes['Brand'] | null; // Brand
-    brandPosts: NexusGenRootTypes['Post'][]; // [Post!]!
     brands: NexusGenRootTypes['Brand'][]; // [Brand!]!
     me: NexusGenRootTypes['User'] | null; // User
     post: NexusGenRootTypes['Post'] | null; // Post
@@ -114,6 +115,9 @@ export interface NexusGenFieldTypes {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    activateUser: { // args
+      id?: string | null; // ID
+    }
     addUserToBrand: { // args
       brandId?: string | null; // ID
       userId?: string | null; // ID
@@ -130,6 +134,9 @@ export interface NexusGenArgTypes {
       email: string; // String!
       name?: string | null; // String
       password: string; // String!
+    }
+    deactivateUser: { // args
+      id?: string | null; // ID
     }
     deleteBrand: { // args
       id?: string | null; // ID
@@ -159,15 +166,11 @@ export interface NexusGenArgTypes {
       email?: string | null; // String
       id?: string | null; // ID
       name?: string | null; // String
-      password?: string | null; // String
     }
   }
   Query: {
     brand: { // args
       where: NexusGenInputs['BrandWhereUniqueInput']; // BrandWhereUniqueInput!
-    }
-    brandPosts: { // args
-      id: string; // ID!
     }
     brands: { // args
       after?: number | null; // Int

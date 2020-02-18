@@ -52,23 +52,50 @@ export const Mutation = mutationType({
         })
 
         t.field('updateUser', {
-            type: 'Authorization',
+            type: 'User',
             args: {
                 id: idArg(),
                 name: stringArg(),
                 email: stringArg(),
-                password: stringArg(),
                 active: booleanArg(),
             },
-            resolve: async (parent, { id, name, email, password, active }, context) => {
-                const hashedPassword = await hash(password, 10)
+            resolve: async (parent, { id, name, email, active }, context) => {
                 return context.prisma.user.update({
                     where: { id: Number(id) },
                     data: {
                         name,
                         email,
-                        password: hashedPassword,
                         active,
+                    },
+                })
+            },
+        })
+
+        t.field('activateUser', {
+            type: 'User',
+            args: {
+                id: idArg(),
+            },
+            resolve: async (parent, { id }, context) => {
+                return context.prisma.user.update({
+                    where: { id: Number(id) },
+                    data: {
+                        active: true,
+                    },
+                })
+            },
+        })
+
+        t.field('deactivateUser', {
+            type: 'User',
+            args: {
+                id: idArg(),
+            },
+            resolve: async (parent, { id }, context) => {
+                return context.prisma.user.update({
+                    where: { id: Number(id) },
+                    data: {
+                        active: false,
                     },
                 })
             },
