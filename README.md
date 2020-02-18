@@ -23,11 +23,63 @@ npm run prisma
 
 Then open the browser link http://localhost:5555
 
+# Security Layer
+
+## isAuthenticatedUser
+
+The user must be logged in in order to access the API call.
+
+## isBrandUser
+
+A user can only call mutation API functions if they are part of that brand. This relationship exists between the `User` and `Brand` tables via the `BrandUsers` mapping table.
+
 # API
+
+This is only a list of the functions and their security requirements. For a more complete API listing, you can browse via the Playground page.
 
 ## Queries
 
+-   brand
+    -   Security: allow
+-   brandPosts
+    -   Security: allow
+-   brands
+    -   Security: allow
+-   me
+    -   Security: isAuthenticatedUser
+-   post
+    -   Security: allow
+-   posts
+    -   Security: allow
+-   user
+    -   Security: allow
+-   users
+    -   Security: allow
+
 ## Mutations
+
+-   addUserToBrand
+    -   Security: isAuthenticatedUser and isBrandUser
+-   createBrand
+    -   Security: isAuthenticatedUser
+-   createPost
+    -   Security: isAuthenticatedUser and isBrandUser
+-   createUser
+    -   Security: allow
+-   deleteBrand
+    -   Security: isAuthenticatedUser and isBrandUser
+-   deletePost
+    -   Security: isAuthenticatedUser and isBrandUser
+-   login
+    -   Security: allow
+-   removeUserFromBrand
+    -   Security: isAuthenticatedUser and isBrandUser
+-   updateBrand
+    -   Security: isAuthenticatedUser and isBrandUser
+-   updatePost
+    -   Security: isAuthenticatedUser and isBrandUser
+-   updateUser
+    -   Security: isAuthenticatedUser
 
 # Libraries
 
@@ -61,7 +113,7 @@ This application does not keep any data around in memory. This is also typical o
 
 ### Error Messages
 
-The graphql-shield library currently swallows error messages. This is by design from a security standpoint. However, graphql-shield allows you to create and pass through error messages.
+The graphql-shield library currently swallows error messages. This is by design for security purposes. However, graphql-shield allows you to create and pass through error messages.
 
 ### Logging
 
