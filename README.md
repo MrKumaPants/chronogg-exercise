@@ -1,3 +1,9 @@
+# Description
+
+This application is a simple example utilizing several different libraries in order to demonstrate how easy it is to implement typically more complex behaviors in a GraphQL server. Going off the new Chrono product, this application implements `user`, `brand`, and `post` objects. It features encrypted authentication along with a security layer via `graphql-shield`. This security layer allows us to easily gate API calls behind conditions such as: a logged in `user` can only make a new post to a `brand` if they are part of that `brand`.
+
+It also features the `prisma2` library which acts as a sort of ORM for GraphQL allowing us to use PostgresQL, MySQL, and SQLite. The `Nexus` library is also used which gives us a code-first approach to creating a GraphQL schema.
+
 # Getting Started
 
 ## Running
@@ -136,8 +142,8 @@ This application does not keep any data around in memory. This is also typical o
 
 ### Error Messages
 
-The graphql-shield library currently swallows error messages. This is by design for security purposes. However, graphql-shield allows you to create and pass through error messages.
+The `graphql-shield` library currently swallows error messages. This is by design for security purposes. However, `graphql-shield` allows you to create and pass through error messages.
 
 ### Logging
 
-Right now there is no logging. However, several libraries exist for custom logging such as apollo-logger, graphql-log, graphql-logger that can be hooked in as middleware to ApolloServer.
+Right now there is no logging. However, several libraries exist for custom logging such as `apollo-logger`, `graphql-log`, `graphql-logger` that can be hooked in as middleware to `ApolloServer`.
