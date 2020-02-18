@@ -7,6 +7,7 @@ export const User = objectType({
         t.model.createdAt()
         t.model.name()
         t.model.email()
+        t.model.active()
         t.model.brands({ pagination: false })
     },
 })

@@ -4,7 +4,7 @@ import { Context } from './context'
 export const APP_SECRET = 'appsecret321'
 
 interface Token {
-    userId: string
+    userId: string;
 }
 
 export function getUserId(context: Context) {

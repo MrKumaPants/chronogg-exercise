@@ -110,6 +110,7 @@ export interface NexusGenFieldTypes {
     }
     User: {
         // field return type
+        active: boolean // Boolean!
         brands: NexusGenRootTypes['Brand'][] // [Brand!]!
         createdAt: any // DateTime!
         email: string // String!

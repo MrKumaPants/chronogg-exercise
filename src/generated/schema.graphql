@@ -59,6 +59,7 @@ type Query {
 }
 
 type User {
+    active: Boolean!
     brands: [Brand!]!
     createdAt: DateTime!
     email: String!
