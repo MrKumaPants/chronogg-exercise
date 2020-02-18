@@ -1,6 +1,6 @@
 import { compare, hash } from 'bcryptjs'
 import { sign } from 'jsonwebtoken'
-import { mutationType, stringArg, idArg } from 'nexus'
+import { mutationType, stringArg, idArg, booleanArg } from 'nexus'
 
 import { APP_SECRET, getUserId } from '../utils'
 
@@ -56,17 +56,19 @@ export const Mutation = mutationType({
             args: {
                 id: idArg(),
                 name: stringArg(),
-                email: stringArg({ nullable: false }),
-                password: stringArg({ nullable: false }),
+                email: stringArg(),
+                password: stringArg(),
+                active: booleanArg(),
             },
-            resolve: async (parent, { id, name, email, password }, context) => {
+            resolve: async (parent, { id, name, email, password, active }, context) => {
                 const hashedPassword = await hash(password, 10)
                 return context.prisma.user.update({
-                    where: { id },
+                    where: { id: Number(id) },
                     data: {
                         name,
                         email,
                         password: hashedPassword,
+                        active,
                     },
                 })
             },
@@ -105,11 +107,11 @@ export const Mutation = mutationType({
             type: 'Brand',
             args: {
                 id: idArg(),
-                name: stringArg({ nullable: false }),
+                name: stringArg(),
             },
             resolve: async (parent, { id, name }, context) => {
                 return context.prisma.brand.update({
-                    where: { id },
+                    where: { id: Number(id) },
                     data: {
                         name,
                     },
@@ -145,7 +147,7 @@ export const Mutation = mutationType({
                 return context.prisma.brand.update({
                     where: { id: Number(brandId) },
                     data: {
-                        users: { disconnect: { id: Number(brandId) } },
+                        users: { disconnect: { id: Number(userId) } },
                     },
                 })
             },
@@ -188,13 +190,12 @@ export const Mutation = mutationType({
             type: 'Post',
             args: {
                 id: idArg(),
-                title: stringArg({ nullable: false }),
+                title: stringArg(),
                 content: stringArg(),
             },
             resolve: async (parent, { id, title, content }, context) => {
-                const userId = getUserId(context)
                 return context.prisma.post.update({
-                    where: { id },
+                    where: { id: Number(id) },
                     data: {
                         title,
                         content,
