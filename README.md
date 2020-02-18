@@ -147,3 +147,7 @@ The `graphql-shield` library currently swallows error messages. This is by desig
 ### Logging
 
 Right now there is no logging. However, several libraries exist for custom logging such as `apollo-logger`, `graphql-log`, `graphql-logger` that can be hooked in as middleware to `ApolloServer`.
+
+### Account Types
+
+There are no account types, so anyone logged in can perform most of the actions. This can easily be fixed by adding an `enum` of account types and applying that to the `User` table. We can then restrict calls by say `Admin` or `Basic` user types.
