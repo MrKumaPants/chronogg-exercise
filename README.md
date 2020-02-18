@@ -23,6 +23,10 @@ npm run prisma
 
 Then open the browser link http://localhost:5555
 
+# Authentication
+
+This application uses `bcrypt` in order to create encrypted authentication tokens. Login via the `login` API call to retrieve the authorization token. All other API calls require this token by passing the given token via the `Authorization` HTTP header with `Bearer <token>`.
+
 # Security Layer
 
 ## isAuthenticatedUser
@@ -40,45 +44,64 @@ This is only a list of the functions and their security requirements. For a more
 ## Queries
 
 -   brand
+    -   Description: Gets a single brand object
     -   Security: allow
 -   brandPosts
+    -   Description: Gets all post objects associated with a single brand
     -   Security: allow
 -   brands
+    -   Description: Gets multiple brand objects
     -   Security: allow
 -   me
+    -   Description: Gets the currently logged in user object
     -   Security: isAuthenticatedUser
 -   post
+    -   Description: Gets a single post object
     -   Security: allow
 -   posts
+    -   Description: Gets multiple post objects
     -   Security: allow
 -   user
+    -   Description: Gets a single user object
     -   Security: allow
 -   users
+    -   Description: Getse multiple user objects
     -   Security: allow
 
 ## Mutations
 
 -   addUserToBrand
+    -   Description: Add a user to a brand
     -   Security: isAuthenticatedUser and isBrandUser
 -   createBrand
+    -   Description: Create a new brand
     -   Security: isAuthenticatedUser
 -   createPost
+    -   Description: Create a new post under a specified brand
     -   Security: isAuthenticatedUser and isBrandUser
 -   createUser
+    -   Description: Create a new user
     -   Security: allow
 -   deleteBrand
+    -   Description: Delete a specific brand
     -   Security: isAuthenticatedUser and isBrandUser
 -   deletePost
+    -   Description: Delete a specific post
     -   Security: isAuthenticatedUser and isBrandUser
 -   login
+    -   Description: Obtain an authorization token
     -   Security: allow
 -   removeUserFromBrand
+    -   Description: Remove a user from a specified brand
     -   Security: isAuthenticatedUser and isBrandUser
 -   updateBrand
+    -   Description: Update a brand object
     -   Security: isAuthenticatedUser and isBrandUser
 -   updatePost
+    -   Description: Update a post object
     -   Security: isAuthenticatedUser and isBrandUser
 -   updateUser
+    -   Description: Update a user object
     -   Security: isAuthenticatedUser
 
 # Libraries
