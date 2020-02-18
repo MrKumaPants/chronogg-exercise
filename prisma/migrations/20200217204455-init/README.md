@@ -1,0 +1,89 @@
+# Migration `20200217204455-init`
+
+This migration has been generated at 2/17/2020, 8:44:55 PM.
+You can check out the [state of the schema](./schema.prisma) after the migration.
+
+## Database Steps
+
+```sql
+CREATE TABLE "quaint"."User" (
+    "createdAt" DATE NOT NULL DEFAULT '1970-01-01 00:00:00' ,
+    "email" TEXT NOT NULL DEFAULT '' ,
+    "id" INTEGER NOT NULL  PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT   ,
+    "password" TEXT NOT NULL DEFAULT '' 
+) 
+
+CREATE TABLE "quaint"."Brand" (
+    "createdAt" DATE NOT NULL DEFAULT '1970-01-01 00:00:00' ,
+    "id" INTEGER NOT NULL  PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT   
+) 
+
+CREATE TABLE "quaint"."Post" (
+    "author" INTEGER NOT NULL  ,
+    "brand" INTEGER NOT NULL  ,
+    "content" TEXT   ,
+    "createdAt" DATE NOT NULL DEFAULT '1970-01-01 00:00:00' ,
+    "id" INTEGER NOT NULL  PRIMARY KEY AUTOINCREMENT,
+    "title" TEXT NOT NULL DEFAULT '' ,FOREIGN KEY ("author") REFERENCES "User"("id") ON DELETE RESTRICT,
+FOREIGN KEY ("brand") REFERENCES "Brand"("id") ON DELETE RESTRICT
+) 
+
+CREATE TABLE "quaint"."_BrandUsers" (
+    "A" INTEGER NOT NULL  ,
+    "B" INTEGER NOT NULL  ,FOREIGN KEY ("A") REFERENCES "Brand"("id") ON DELETE CASCADE,
+FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE
+) 
+
+CREATE UNIQUE INDEX "quaint"."User.email" ON "User"("email")
+
+CREATE UNIQUE INDEX "quaint"."Brand.name" ON "Brand"("name")
+
+CREATE UNIQUE INDEX "quaint"."_BrandUsers_AB_unique" ON "_BrandUsers"("A","B")
+```
+
+## Changes
+
+```diff
+diff --git schema.prisma schema.prisma
+migration ..20200217204455-init
+--- datamodel.dml
++++ datamodel.dml
+@@ -1,0 +1,33 @@
++generator client {
++    provider = "prisma-client-js"
++}
++
++datasource db {
++    provider = "sqlite"
++    url      = "sqlite:./dev.db"
++}
++
++model User {
++    createdAt DateTime @default(now())
++    email     String   @unique
++    id        Int      @default(autoincrement()) @id
++    name      String?
++    password  String
++    brands    Brand[]  @relation(name: "BrandUsers")
++}
++
++model Brand {
++    createdAt DateTime @default(now())
++    id        Int      @default(autoincrement()) @id
++    name      String?  @unique
++    users     User[]   @relation(name: "BrandUsers")
++}
++
++model Post {
++    createdAt DateTime @default(now())
++    id        Int      @default(autoincrement()) @id
++    title     String
++    content   String?
++    author    User
++    brand     Brand
++}
+```
+
+
